@@ -45,3 +45,30 @@ func (db DB) insertDefaultMetaData() {
     log.Fatalln(err)
 	}
 }
+
+func (db DB) resetMetaData() {
+  q := "UPDATE metadata SET isTaskActive=false, currentTaskId=0 WHERE id = 0"
+  _, err := db.db.Exec(q)
+  if err != nil {
+    log.Fatalln(err)
+  }
+}
+
+func (db DB) setMetaDataActive(id int) {
+  _, err := db.db.Exec("UPDATE metadata SET isTaskActive=true, currentTaskId = $1 WHERE id = 0", id)
+  if err != nil {
+    log.Fatalln(err)
+  }
+}
+
+func (db DB) isTaskActive() (isTaskActive bool, id int) {
+  rows, err := db.db.Query("SELECT isTaskActive, currenttaskid from metadata where id=0")
+  if err != nil {
+    log.Println(err)
+  }
+  if rows.Next() {
+    rows.Scan(&isTaskActive, &id)
+  }
+  return isTaskActive, id
+}
+
