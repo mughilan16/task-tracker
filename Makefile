@@ -7,5 +7,11 @@ createdb:
 dropdb:
 	docker exec -it postgres14 dropdb task-tracker
 
+build:
+	cd app && go build .
+
+install:
+	mv ./app/app ~/.local/bin/tt
+
 .PHONY: postgres createdb dropdb
 

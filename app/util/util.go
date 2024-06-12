@@ -23,7 +23,6 @@ func StringToInt(s string) int {
 func MinuteToHour(minu int) string {
 	hours := minu / 60
 	minutes := minu % 60
-  fmt.Println(minutes)
 	var hourString, minutesString string
 	if hours < 10 {
 		hourString = fmt.Sprintf("0%d", hours)
