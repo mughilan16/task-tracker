@@ -1,6 +1,9 @@
 package db
 
-import "fmt"
+import (
+	"fmt"
+	"task-tracker/app/util"
+)
 
 func (db DB) AddNewTask(message string) {
 	isTaskActive, _ := db.isTaskActive()
@@ -10,6 +13,7 @@ func (db DB) AddNewTask(message string) {
 	}
 	id := db.addNewTask(message)
 	db.setMetaDataActive(id)
+  fmt.Println("Create new task :", message)
 }
 
 func (db DB) CompleteTask() {
@@ -18,6 +22,8 @@ func (db DB) CompleteTask() {
 		fmt.Println("No task is current active")
 		return
 	}
-  db.completeTask(id)
+	message, total_time := db.completeTask(id)
+  total := util.MinuteToHour(total_time)
+	fmt.Println("Complete task :", message, "taken", total)
 	db.resetMetaData()
 }

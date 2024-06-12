@@ -1,8 +1,6 @@
 package main
 
-import (
-	"task-tracker/app/db"
-)
+import "task-tracker/app/db"
 
 type App struct {
 	db *db.DB
@@ -16,6 +14,6 @@ func createApp() *App {
 
 func main() {
 	app := createApp()
-  app.InitFlags()
-  app.db.Init()
+	app.InitFlags()
+	app.db.Init()
 }
