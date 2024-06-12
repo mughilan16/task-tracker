@@ -13,7 +13,7 @@ func (db DB) AddNewTask(message string) {
 	}
 	id := db.addNewTask(message)
 	db.setMetaDataActive(id)
-  fmt.Println("Create new task :", message)
+  fmt.Println("Started new task :", message)
 }
 
 func (db DB) CompleteTask() {
