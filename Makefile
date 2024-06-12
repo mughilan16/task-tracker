@@ -13,5 +13,5 @@ build:
 install:
 	mv ./app/app ~/.local/bin/tt
 
-.PHONY: postgres createdb dropdb
+.PHONY: postgres createdb dropdb build install
 
