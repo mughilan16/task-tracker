@@ -14,6 +14,7 @@ type Task struct {
   start_time string
   stop_time string
   total int
+  tag string
 }
 
 func (db DB) createTaskTable() {
@@ -24,12 +25,12 @@ func (db DB) createTaskTable() {
 	}
 }
 
-func (db DB) addNewTask(message string) (id int) {
-	q := "INSERT INTO tasks(message, date, start_time) VALUES($1, $2, $3) RETURNING id"
+func (db DB) addNewTask(message string, tag string) (id int) {
+	q := "INSERT INTO tasks(message, date, start_time, tag) VALUES($1, $2, $3, $4) RETURNING id"
 	dateTime := strings.Split(time.Now().String(), " ")
 	date := dateTime[0]
 	start_time := strings.Split(dateTime[1], ".")[0]
-	rows, err := db.db.Query(q, message, date, start_time)
+	rows, err := db.db.Query(q, message, date, start_time, tag)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -71,14 +72,14 @@ func (db DB) completeTask(taskId int) (message string, total int) {
 }
 
 func (db DB) getTasks() (tasks []Task) {
-  q := "SELECT id, message, date, start_time, stop_time, total FROM tasks"
+  q := "SELECT id, message, date, start_time, stop_time, total, tag FROM tasks"
   rows, err := db.db.Query(q)
   if err != nil {
     log.Fatalln(err)
   }
   for rows.Next() {
     var task Task
-    rows.Scan(&task.id, &task.message, &task.date, &task.start_time, &task.stop_time, &task.total)
+    rows.Scan(&task.id, &task.message, &task.date, &task.start_time, &task.stop_time, &task.total, &task.tag)
     tasks = append(tasks, task)
   }
   return

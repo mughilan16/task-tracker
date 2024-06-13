@@ -16,10 +16,11 @@ type taskWithFilter struct {
 	start_time string
 	stop_time  string
 	total      int
+	tag        string
 }
 
-func (db DB) getTotalForMonth(month int, year int) (total int) {
-	tasks := db.filterMonthYear(month, year)
+func (db DB) getTotalForMonth(month int, year int, tag string) (total int) {
+	tasks := db.filterMonthYear(month, year, tag)
 	total = 0
 	for _, task := range tasks {
 		total += task.total
@@ -27,10 +28,10 @@ func (db DB) getTotalForMonth(month int, year int) (total int) {
 	return
 }
 
-func (db DB) filterMonthYear(month int, year int) (result []taskWithFilter) {
+func (db DB) filterMonthYear(month int, year int, tag string) (result []taskWithFilter) {
 	tasks := db.getFilteredTask()
 	for _, task := range tasks {
-		if time.Month(month) == task.month && year == task.year {
+		if time.Month(month) == task.month && year == task.year && (task.tag == tag || tag == "all") {
 			result = append(result, task)
 		}
 	}
@@ -58,6 +59,7 @@ func convertTaskToFiltered(tasks []Task) (result []taskWithFilter) {
 			month:      time.Month(util.StringToInt(strings.Split(task.date[:10], "-")[1])),
 			year:       util.StringToInt(task.date[:4]),
 			total:      task.total,
+			tag:        task.tag,
 		}
 		result = append(result, newTask)
 	}
