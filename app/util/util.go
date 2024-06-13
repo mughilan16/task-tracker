@@ -36,3 +36,4 @@ func MinuteToHour(minu int) string {
 	}
 	return fmt.Sprintf("%s:%s", hourString, minutesString)
 }
+

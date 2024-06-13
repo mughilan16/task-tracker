@@ -13,7 +13,7 @@ type Task struct {
   date string
   start_time string
   stop_time string
-  total string
+  total int
 }
 
 func (db DB) createTaskTable() {
@@ -76,10 +76,11 @@ func (db DB) getTasks() (tasks []Task) {
   if err != nil {
     log.Fatalln(err)
   }
-  if rows.Next() {
+  for rows.Next() {
     var task Task
     rows.Scan(&task.id, &task.message, &task.date, &task.start_time, &task.stop_time, &task.total)
     tasks = append(tasks, task)
   }
   return
 }
+
