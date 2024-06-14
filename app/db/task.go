@@ -18,7 +18,7 @@ type Task struct {
 }
 
 func (db DB) createTaskTable() {
-	q := "CREATE TABLE IF NOT EXISTS tasks(id SERIAL, message TEXT, date DATE, start_time TIME, stop_time TIME, total INT)"
+	q := "CREATE TABLE IF NOT EXISTS tasks(id SERIAL, message TEXT, date DATE, start_time TIME, stop_time TIME, total INT, tag STRING)"
 	_, err := db.db.Exec(q)
 	if err != nil {
 		log.Fatalln(err)

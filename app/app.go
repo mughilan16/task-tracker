@@ -14,6 +14,6 @@ func createApp() *App {
 
 func main() {
 	app := createApp()
-	app.InitFlags()
 	app.db.Init()
+	app.InitFlags()
 }
