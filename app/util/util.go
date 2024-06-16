@@ -37,3 +37,7 @@ func MinuteToHour(minu int) string {
 	return fmt.Sprintf("%s:%s", hourString, minutesString)
 }
 
+func HourInfo(minu int) string {
+	t := strings.Split(MinuteToHour(minu), ":")
+	return fmt.Sprintln(t[0], "hours", t[1], "min")
+}

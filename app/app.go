@@ -8,7 +8,7 @@ type App struct {
 
 func createApp() *App {
 	return &App{
-		db: db.Connect(),
+		db: db.New(),
 	}
 }
 

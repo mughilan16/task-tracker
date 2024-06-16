@@ -7,7 +7,7 @@ import (
 )
 
 func (app App) InitFlags() {
-	var start, complete, total, export bool
+	var start, complete, total, export, today, currentMonth, info bool
 	var message, tag string
 	var month, year int
 	flag.BoolVar(&start, "start", false, "start a new task")
@@ -15,9 +15,12 @@ func (app App) InitFlags() {
 	flag.IntVar(&month, "month", int(time.Now().Month()), "month for query")
 	flag.IntVar(&year, "year", int(time.Now().Year()), "year for query")
 	flag.BoolVar(&complete, "complete", false, "complete the current task")
-	flag.StringVar(&tag, "tag", "work", "tag for work, personal. default tag: work. all tag only should be used when querying")
+	flag.StringVar(&tag, "tag", "all", "tag for work, personal. default tag: all. all tag only should be used when querying")
 	flag.BoolVar(&total, "total", false, "show total for month")
+	flag.BoolVar(&info, "info", false, "show info of current task")
 	flag.BoolVar(&export, "export", false, "export task to csv")
+  flag.BoolVar(&today, "today", false, "set today date for filter")
+  flag.BoolVar(&currentMonth, "currentmonth", false, "set current month for filter")
 	flag.Parse()
 	if tag != "work" && tag != "personal" && tag != "all" {
 		fmt.Println("Invalid tag")
@@ -40,6 +43,14 @@ func (app App) InitFlags() {
 		return
 	}
 	if total {
+    if today {
+      app.db.TodayTotal(tag)
+      return
+    }
+    if currentMonth {
+      app.db.ThisMonthTotal(tag)
+      return
+    }
 		app.db.TotalForMonth(month, year, tag)
 		return
 	}
@@ -47,4 +58,7 @@ func (app App) InitFlags() {
 		app.db.Export(month, year, tag)
 		return
 	}
+  if info {
+    app.db.ActiveTask()
+  }
 }

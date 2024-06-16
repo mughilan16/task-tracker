@@ -16,22 +16,23 @@ type Config struct {
 }
 
 type DB struct {
-	db     *sql.DB
 	config Config
 }
 
-func Connect() *DB {
+func New() *DB {
 	db := &DB{
-		db:     nil,
 		config: getDevConfig(),
 	}
-  psqlInfo := db.getPsqlInfo()
+	return db
+}
+
+func (db *DB) getConnection() *sql.DB {
+	psqlInfo := db.getPsqlInfo()
 	conn, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
 	}
-	db.db = conn
-	return db
+	return conn
 }
 
 func getDevConfig() Config {
@@ -45,8 +46,8 @@ func getDevConfig() Config {
 }
 
 func (db *DB) Init() {
-  db.createMetaDataTable()
-  db.createTaskTable()
+	db.createMetaDataTable()
+	db.createTaskTable()
 }
 
 func (db *DB) getPsqlInfo() string {
@@ -54,7 +55,9 @@ func (db *DB) getPsqlInfo() string {
 }
 
 func (db *DB) TestDB() {
-	err := db.db.Ping()
+  conn := db.getConnection()
+	err := conn.Ping()
+  defer conn.Close()
 	if err != nil {
 		panic(err)
 	}

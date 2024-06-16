@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"task-tracker/app/util"
+	"time"
 )
 
 func (db DB) AddNewTask(message string, tag string) {
@@ -41,4 +42,43 @@ func (db DB) Export(month int, year int, tag string) {
 	}
 	total := db.getTotalForMonth(month, year, tag)
 	fmt.Printf(",,,,%s\n", util.MinuteToHour(total))
+}
+
+func (db DB) ThisMonthTotal(tag string) {
+	tasks := filterTag(convertTaskToFiltered(db.getTasks()), tag)
+	total := 0
+	currentMonth := time.Now().Month()
+	for _, task := range tasks {
+		if task.month == currentMonth {
+			total += task.total
+		}
+	}
+	currentTaskTime, _, currentTag, isTaskActive := db.getCurrentTask()
+	if isTaskActive && tag == currentTag {
+		total += currentTaskTime
+	}
+	fmt.Println("This Month:", util.MinuteToHour(total))
+}
+
+func (db DB) TodayTotal(tag string) {
+	tasks := filterTag(convertTaskToFiltered(db.getTasks()), tag)
+	tasks = filterDay(tasks, time.Now().Day(), int(time.Now().Month()), time.Now().Year())
+	total := 0
+	for _, task := range tasks {
+		total += task.total
+	}
+	currentTaskTime, _, currentTag, isTaskActive := db.getCurrentTask()
+	if isTaskActive && currentTag == tag {
+		total += currentTaskTime
+	}
+	fmt.Println("Today:", util.MinuteToHour(total))
+}
+
+func (db DB) ActiveTask() {
+	total, message, tag, isActive := db.getCurrentTask()
+	if !isActive {
+		fmt.Println("No current task")
+		return
+	}
+	fmt.Println("working on", message, "-", tag, "for", util.MinuteToHour(total))
 }
