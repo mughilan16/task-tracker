@@ -1,15 +1,15 @@
 ## Usage of tt:
-### complete
+### -complete
 complete the current task
-### export
+### -export
 export task to csv
-### month int
+### -month int
 month for query (default 6)
-### start string
+### -start string
 start a new task
-### tag string
+### -tag string
 tag for work, personal. default tag: work. all tag only should be used when querying (default "work")
-### total
+### -total
 show total for month
-### year int
+### -year int
 year for query (default 2024)
