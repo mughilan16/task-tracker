@@ -57,12 +57,12 @@ func (db DB) ThisMonthTotal(tag string) {
 	if isTaskActive && tag == currentTag {
 		total += currentTaskTime
 	}
-	fmt.Println("this month:", util.MinuteToHour(total))
+	fmt.Println("This month:", util.MinuteToHour(total))
 }
 
 func (db DB) TodayTotal(tag string) {
-	tasks := filterTag(convertTaskToFiltered(db.getTasks()), tag)
-	tasks = filterDay(tasks, time.Now().Day(), int(time.Now().Month()), time.Now().Year())
+	newtasks := filterTag(convertTaskToFiltered(db.getTasks()), tag)
+  tasks := filterDay(newtasks, time.Now().Day(), int(time.Now().Month()), time.Now().Year())
 	total := 0
 	for _, task := range tasks {
 		total += task.total
@@ -71,14 +71,15 @@ func (db DB) TodayTotal(tag string) {
 	if isTaskActive && currentTag == tag {
 		total += currentTaskTime
 	}
-	fmt.Println("today:", util.MinuteToHour(total))
+	fmt.Println("Today:", util.MinuteToHour(total))
 }
 
 func (db DB) ActiveTask() {
 	total, message, tag, isActive := db.getCurrentTask()
 	if !isActive {
-		fmt.Println("no current task")
+    total, message, tag := db.getLastTask()
+    fmt.Println("Worked on", message, "-", tag, util.MinuteToHour(total), "ago")
 		return
 	}
-	fmt.Println("working on", message, "-", tag, "for", util.MinuteToHour(total))
+	fmt.Println("Working on", message, "-", tag, "for", util.MinuteToHour(total))
 }

@@ -118,3 +118,22 @@ func (db DB) getCurrentTask() (int, string, string, bool) {
 	return total, message, tag, true
 }
 
+func (db DB) getLastTask() (int, string, string) {
+	q := "SELECT stop_time, date, message, tag FROM tasks ORDER BY ID DESC LIMIT 1"
+	conn := db.getConnection()
+	defer conn.Close()
+	rows, err := conn.Query(q)
+	var stopTime, date, message, tag string
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if rows.Next() {
+		rows.Scan(&stopTime, &date, &message, &tag)
+	}
+	year, month, day := util.FormatDateAndTime(date[0:10], "-")
+	hour, minu, sec := util.FormatDateAndTime(stopTime[11:19], ":")
+	start_time := time.Date(year, time.Month(month), day, hour, minu, sec, 0, time.Now().Location())
+	total := int(time.Now().Sub(start_time).Minutes())
+	return total, message, tag
+}
+
