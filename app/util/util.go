@@ -39,5 +39,8 @@ func MinuteToHour(minu int) string {
 
 func HourInfo(minu int) string {
 	t := strings.Split(MinuteToHour(minu), ":")
-	return fmt.Sprintln(t[0], "hours", t[1], "min")
+	if minu < 60 {
+		return fmt.Sprint(StringToInt(t[1]), " minutes")
+	}
+	return fmt.Sprint(StringToInt(t[0]), ":", t[1], " hours")
 }

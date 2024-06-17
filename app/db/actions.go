@@ -31,7 +31,7 @@ func (db DB) CompleteTask() {
 
 func (db DB) TotalForMonth(month int, year int, tag string) {
 	total := db.getTotalForMonth(month, year, tag)
-	fmt.Println("Total Time: ", util.MinuteToHour(total))
+	fmt.Println("Total Time: ", util.HourInfo(total))
 }
 
 func (db DB) Export(month int, year int, tag string) {
@@ -41,7 +41,7 @@ func (db DB) Export(month int, year int, tag string) {
 		fmt.Printf("%d,%s,%s,%s,%s,%s\n", task.s_no, task.date, task.start_time, task.stop_time, util.MinuteToHour(task.total), task.message)
 	}
 	total := db.getTotalForMonth(month, year, tag)
-	fmt.Printf(",,,,%s\n", util.MinuteToHour(total))
+	fmt.Printf(",,,,%s\n", util.HourInfo(total))
 }
 
 func (db DB) ThisMonthTotal(tag string) {
@@ -57,12 +57,12 @@ func (db DB) ThisMonthTotal(tag string) {
 	if isTaskActive && tag == currentTag {
 		total += currentTaskTime
 	}
-	fmt.Println("This month:", util.MinuteToHour(total))
+	fmt.Println("This month:", util.HourInfo(total))
 }
 
 func (db DB) TodayTotal(tag string) {
 	newtasks := filterTag(convertTaskToFiltered(db.getTasks()), tag)
-  tasks := filterDay(newtasks, time.Now().Day(), int(time.Now().Month()), time.Now().Year())
+	tasks := filterDay(newtasks, time.Now().Day(), int(time.Now().Month()), time.Now().Year())
 	total := 0
 	for _, task := range tasks {
 		total += task.total
@@ -71,15 +71,15 @@ func (db DB) TodayTotal(tag string) {
 	if isTaskActive && currentTag == tag {
 		total += currentTaskTime
 	}
-	fmt.Println("Today:", util.MinuteToHour(total))
+	fmt.Println("Today:", util.HourInfo(total))
 }
 
 func (db DB) ActiveTask() {
 	total, message, tag, isActive := db.getCurrentTask()
 	if !isActive {
-    total, message, tag := db.getLastTask()
-    fmt.Println("Worked on", message, "-", tag, util.MinuteToHour(total), "ago")
+		total, message, tag := db.getLastTask()
+    fmt.Printf("Worked on \"%s - %s\" %s ago", message, tag, util.HourInfo(total))
 		return
 	}
-	fmt.Println("Working on", message, "-", tag, "for", util.MinuteToHour(total))
+  fmt.Printf("Working on \"%s - %s\" for %s", message, tag, util.HourInfo(total))
 }
