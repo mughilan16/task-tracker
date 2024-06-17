@@ -7,10 +7,11 @@ import (
 )
 
 func (app App) InitFlags() {
-	var start, complete, total, export, today, currentMonth, info bool
+	var start, complete, total, export, today, currentMonth, info, create, projects bool
 	var message, tag string
 	var month, year int
 	flag.BoolVar(&start, "start", false, "start a new task")
+	flag.BoolVar(&create, "create", false, "create a new project")
 	flag.StringVar(&message, "m", "", "description of task")
 	flag.IntVar(&month, "month", int(time.Now().Month()), "month for query")
 	flag.IntVar(&year, "year", int(time.Now().Year()), "year for query")
@@ -21,6 +22,7 @@ func (app App) InitFlags() {
 	flag.BoolVar(&export, "export", false, "export task to csv")
   flag.BoolVar(&today, "today", false, "set today date for filter")
   flag.BoolVar(&currentMonth, "currentmonth", false, "set current month for filter")
+  flag.BoolVar(&projects, "projects", false, "list the projects")
 	flag.Parse()
 	if tag != "work" && tag != "personal" && tag != "all" {
 		fmt.Println("Invalid tag")
@@ -59,6 +61,10 @@ func (app App) InitFlags() {
 		return
 	}
   if info {
-    app.db.ActiveTask()
+    app.db.ActiveTask(tag)
+  }
+  if create {
+  }
+  if projects {
   }
 }

@@ -48,6 +48,7 @@ func getDevConfig() Config {
 func (db *DB) Init() {
 	db.createMetaDataTable()
 	db.createTaskTable()
+	db.createProjectTable()
 }
 
 func (db *DB) getPsqlInfo() string {

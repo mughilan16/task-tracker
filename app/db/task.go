@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"log"
 	"strings"
 	"task-tracker/app/util"
@@ -118,11 +119,18 @@ func (db DB) getCurrentTask() (int, string, string, bool) {
 	return total, message, tag, true
 }
 
-func (db DB) getLastTask() (int, string, string) {
-	q := "SELECT stop_time, date, message, tag FROM tasks ORDER BY ID DESC LIMIT 1"
+func (db DB) getLastTask(input_tag string) (int, string, string) {
 	conn := db.getConnection()
 	defer conn.Close()
-	rows, err := conn.Query(q)
+  var rows *sql.Rows
+  var err error
+	if input_tag == "all" {
+		q := "SELECT stop_time, date, message, tag FROM tasks ORDER BY ID DESC LIMIT 1"
+		rows, err = conn.Query(q)
+	} else {
+		q := "SELECT stop_time, date, message, tag FROM tasks WHERE tag=$1 ORDER BY ID DESC LIMIT 1"
+		rows, err = conn.Query(q, input_tag)
+	}
 	var stopTime, date, message, tag string
 	if err != nil {
 		log.Fatalln(err)
@@ -136,4 +144,3 @@ func (db DB) getLastTask() (int, string, string) {
 	total := int(time.Now().Sub(start_time).Minutes())
 	return total, message, tag
 }
-

@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+func (db DB) CreateNewProject(name, tag string) {
+  db.addNewProject(name, tag)
+  fmt.Printf("Created a new project: %s (%s)", name, tag)
+}
+
 func (db DB) AddNewTask(message string, tag string) {
 	isTaskActive, _ := db.isTaskActive()
 	if isTaskActive {
@@ -31,7 +36,7 @@ func (db DB) CompleteTask() {
 
 func (db DB) TotalForMonth(month int, year int, tag string) {
 	total := db.getTotalForMonth(month, year, tag)
-	fmt.Println("Total Time: ", util.HourInfo(total))
+	fmt.Println(util.HourInfo(total))
 }
 
 func (db DB) Export(month int, year int, tag string) {
@@ -57,7 +62,7 @@ func (db DB) ThisMonthTotal(tag string) {
 	if isTaskActive && tag == currentTag {
 		total += currentTaskTime
 	}
-	fmt.Println("This month:", util.HourInfo(total))
+	fmt.Println(util.HourInfo(total))
 }
 
 func (db DB) TodayTotal(tag string) {
@@ -71,13 +76,13 @@ func (db DB) TodayTotal(tag string) {
 	if isTaskActive && currentTag == tag {
 		total += currentTaskTime
 	}
-	fmt.Println("Today:", util.HourInfo(total))
+	fmt.Println(util.HourInfo(total))
 }
 
-func (db DB) ActiveTask() {
+func (db DB) ActiveTask(input_tag string) {
 	total, message, tag, isActive := db.getCurrentTask()
 	if !isActive {
-		total, message, tag := db.getLastTask()
+		total, message, tag := db.getLastTask(input_tag)
     fmt.Printf("Worked on \"%s - %s\" %s ago", message, tag, util.HourInfo(total))
 		return
 	}

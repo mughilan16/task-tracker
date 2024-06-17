@@ -9,13 +9,23 @@ type Project struct {
 }
 
 func (db DB) createProjectTable() {
-	q := "CREATE TABLE IF NOT EXISTS projects(id SERIAL, name string, tag string)"
+	q := "CREATE TABLE IF NOT EXISTS projects(id SERIAL, name TEXT, tag TEXT)"
 	conn := db.getConnection()
 	defer conn.Close()
 	_, err := conn.Exec(q)
 	if err != nil {
 		log.Fatalln(err)
 	}
+}
+
+func (db DB) addNewProject(name string, tag string) {
+  q := "INSERT INTO projects(name, tag) VALUE($1, $2)"
+  conn := db.getConnection()
+  defer conn.Close()
+  _, err := conn.Exec(q, name, tag)
+  if err != nil {
+    log.Fatalln(err)
+  }
 }
 
 func (db DB) getProjects() (projects []Project){
@@ -32,3 +42,4 @@ func (db DB) getProjects() (projects []Project){
   }
   return
 }
+
